@@ -1,0 +1,12 @@
+services:
+  postgres:
+    image: 'postgis/postgis:17-3.5'
+    labels:
+      # postgis 이미지를 Spring Boot가 postgres로 인식하게 함
+      org.springframework.boot.service-connection: postgres
+    environment:
+      - 'POSTGRES_DB=pawmap'
+      - 'POSTGRES_USER=pawmap'
+      - 'POSTGRES_PASSWORD=pawmap'
+    ports:
+      - '5432'
