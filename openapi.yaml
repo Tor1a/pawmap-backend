@@ -1,0 +1,47 @@
+openapi: 3.1.0
+info:
+  title: PawMap API
+  version: 0.1.0
+paths:
+  /api/places:
+    get:
+      summary: 반려동물 동반 가능 장소 목록
+      parameters:
+        - { name: lat, in: query, required: true, schema: { type: number } }
+        - { name: lng, in: query, required: true, schema: { type: number } }
+        - { name: radius, in: query, description: 미터 단위, schema: { type: integer, default: 3000 } }
+        - { name: petType, in: query, schema: { $ref: '#/components/schemas/PetType' } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: array, items: { $ref: '#/components/schemas/Place' } }
+  /api/places/{id}:
+    get:
+      summary: 장소 상세
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: integer, format: int64 } }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Place' }
+        '404': { description: Not Found }
+components:
+  schemas:
+    PetType:
+      type: string
+      enum: [DOG, CAT]
+    Place:
+      type: object
+      required: [id, name, category, lat, lng, allowedPets]
+      properties:
+        id: { type: integer, format: int64 }
+        name: { type: string }
+        category: { type: string, description: '예: CAFE, RESTAURANT, PARK, ACCOMMODATION' }
+        address: { type: string }
+        lat: { type: number }
+        lng: { type: number }
+        allowedPets: { type: array, items: { $ref: '#/components/schemas/PetType' } }
